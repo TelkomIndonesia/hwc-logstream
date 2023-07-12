@@ -11,6 +11,7 @@ var maxFetchRange = strToDurationOrDefault(os.Getenv("HWC_LOGSTREAM_MAX_FETCH_RA
 var minFetchRange = strToDurationOrDefault(os.Getenv("HWC_LOGSTREAM_MIN_FETCH_RANGE"), time.Minute)
 var streamRoutine = int(strToIntOrDefault(os.Getenv("HWC_LOGSTREAM_ROUTINE"), 5))
 var streamPosTag = envOrDefault("HWC_LOGSTREAM_POSITITION_TAG", "x-hwc-logstream-pos")
+var streamExclusionTag = envOrDefault("HWC_LOGSTREAM_EXCLUSION_TAG", "x-hwc-logstream-exclude")
 
 func envOrDefault(name, def string) string {
 	v, ok := os.LookupEnv(name)

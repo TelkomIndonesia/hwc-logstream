@@ -8,4 +8,4 @@ See <https://github.com/huaweicloud/huaweicloud-sdk-go-v3#241-environment-variab
 
 ## Configuration
 
-See [config.go](./config.go#L12-L18) for configuration item
+See [config.go](./config.go#L12-L18) for configuration item.

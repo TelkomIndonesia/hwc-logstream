@@ -103,7 +103,7 @@ func (m LogstreamManager) SyncStreamList(ctx context.Context) (err error) {
 
 		for _, stream := range *streams.LogStreams {
 			if _, ok := stream.Tag[streamExclusionTag]; ok {
-				log.Printf("[INFO] stream '%s' of group '%s' is excluded.\n", group.LogGroupName, stream.LogStreamName)
+				log.Printf("[INFO] stream '%s' of group '%s' is excluded.\n", stream.LogStreamName, group.LogGroupName)
 				continue
 			}
 

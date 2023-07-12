@@ -1,0 +1,11 @@
+[sources.hwc_lts_stream]
+type = "stdin"
+decoding.codec = "bytes"
+framing.method = "newline_delimited"
+
+[sinks.console]
+type = "http"
+inputs = ["hwc_lts_stream"]
+encoding.codec = "raw_message"
+framing.method = "newline_delimited"
+uri = "http://vector-aggregator:8080"

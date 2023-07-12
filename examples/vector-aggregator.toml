@@ -1,0 +1,11 @@
+[sources.hwc_lts_stream]
+type = "http_server"
+address = "0.0.0.0:8080"
+decoding.codec = "json"
+framing.method = "newline_delimited"
+
+[sinks.console]
+type = "console"
+inputs = ["hwc_lts_stream"]
+encoding.codec = "json"
+framing.method = "newline_delimited"

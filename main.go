@@ -8,7 +8,6 @@ import (
 	"syscall"
 
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/auth/provider"
-	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/region"
 	lts "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/lts/v2"
 )
 
@@ -23,7 +22,7 @@ func main() {
 	}
 	ltsc := lts.NewLtsClient(lts.LtsClientBuilder().
 		WithCredential(auth).
-		WithRegion(region.NewRegion("ap-southeast-4", "https://lts.ap-southeast-4.myhuaweicloud.com")).
+		WithRegion(regionFromEnv()).
 		Build())
 
 	errc := make(chan error)

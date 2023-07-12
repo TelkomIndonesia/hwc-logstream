@@ -4,6 +4,9 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/region"
+	ltsregion "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/lts/v2/region"
 )
 
 var maxEndFromNow = strToDurationOrDefault(os.Getenv("HWC_LOGSTREAM_MAX_END_FROM_NOW"), time.Minute)
@@ -12,6 +15,20 @@ var minFetchRange = strToDurationOrDefault(os.Getenv("HWC_LOGSTREAM_MIN_FETCH_RA
 var streamRoutine = int(strToIntOrDefault(os.Getenv("HWC_LOGSTREAM_ROUTINE"), 5))
 var streamPosTag = envOrDefault("HWC_LOGSTREAM_POSITITION_TAG", "x-hwc-logstream-pos")
 var streamExclusionTag = envOrDefault("HWC_LOGSTREAM_EXCLUSION_TAG", "x-hwc-logstream-exclude")
+
+var addRegion = map[string]*region.Region{
+	"ap-southeast-4": region.NewRegion("ap-southeast-4", "https://lts.ap-southeast-4.myhuaweicloud.com"),
+}
+
+func regionFromEnv() *region.Region {
+	name := envOrDefault("HUAWEICLOUD_SDK_REGION_ID", "ap-southeast-4")
+
+	if r, ok := addRegion[name]; ok {
+		return r
+	}
+
+	return ltsregion.ValueOf(name)
+}
 
 func envOrDefault(name, def string) string {
 	v, ok := os.LookupEnv(name)

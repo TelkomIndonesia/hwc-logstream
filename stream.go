@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/services/lts/v2/model"
@@ -70,9 +71,15 @@ func (s *Logstream) String() string {
 func (s *Logstream) UpdateTags(group model.LogGroup, stream model.LogStream) {
 	tags := map[string]string{}
 	for k, v := range group.Tag {
+		if strings.HasPrefix(k, "_") || k == streamExclusionTag {
+			continue
+		}
 		tags[k] = v
 	}
 	for k, v := range stream.Tag {
+		if strings.HasPrefix(k, "_") || k == streamExclusionTag {
+			continue
+		}
 		tags[k] = v
 	}
 	if s.tags != nil {
@@ -94,6 +101,8 @@ func (s *Logstream) LoadPositition() (err error) {
 	if err != nil {
 		return fmt.Errorf("fail to parse %s as time: %w", v, err)
 	}
+
+	delete(s.tags, streamPosTag)
 	s.start, s.last = t, t
 	return
 }

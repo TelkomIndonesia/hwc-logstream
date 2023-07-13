@@ -9,3 +9,7 @@ See <https://github.com/huaweicloud/huaweicloud-sdk-go-v3#241-environment-variab
 ## Configuration
 
 See [config.go](./config.go#L12-L18) for configuration item.
+
+## Example
+
+See [examples](examples) on how to use it in docker container combined with [vector](https://vector.dev/) to route the logs.

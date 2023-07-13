@@ -1,27 +1,53 @@
+volumes:
+  pipe: {}
+
 services:
-  # stdin sidecars, pick one
-  benthos:
-    image: jeffail/benthos:4.18.0
-    command: 
-      -s "input.type=stdin" 
-      -s "output.type=http_client" 
-      -s "output.http_client.url=http://vector-aggregator:8080"
-      -s "output.http_client.retries=9223372036854775807"
-      -s "output.http_client.batching.byte_size=5000"
-      -s "output.http_client.batching.count=1000"
-      -s "output.http_client.batching.period=1s"
-      
+  pipe:
+    image: alpine:3.16
+    volumes:
+      - pipe:/var/run/hwc-logstream
+    command:
+      - sh
+      - -c
+      - rm -f /var/run/hwc-logstream/pipe && mkfifo /var/run/hwc-logstream/pipe
+
+  hwc-logstream:
+    build: ".."
+    depends_on:
+      pipe:
+        condition: service_completed_successfully
+    environment:
+      HUAWEICLOUD_SDK_AK:
+      HUAWEICLOUD_SDK_SK:
+      HUAWEICLOUD_SDK_PROJECT_ID:
+    volumes:
+      - pipe:/var/run/hwc-logstream
+    entrypoint: []
+    command:
+      - sh
+      - -c
+      - hwc-logstream > /var/run/hwc-logstream/pipe
+
+  # Sidecar
   vector:
     image: timberio/vector:0.31.0-debian
+    depends_on:
+      pipe:
+        condition: service_completed_successfully
     volumes:
       - ./vector.toml:/etc/vector/vector.toml:ro
+      - pipe:/var/run/hwc-logstream
+    entrypoint: []
+    command:
+      - sh
+      - -c
+      - vector -c /etc/vector/vector.toml < /var/run/hwc-logstream/pipe
 
-  # HTTP log receiver
+  # Aggregator
   vector-aggregator:
     image: timberio/vector:0.31.0-debian
     volumes:
       - ./vector-aggregator.toml:/etc/vector/vector.toml:ro
-    ports: 
+      - ./vector-aggregator.vrl:/etc/vector/vector-aggregator.vrl:ro
+    ports:
       - 8080:8080
-
-  

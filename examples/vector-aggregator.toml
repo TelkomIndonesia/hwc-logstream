@@ -4,8 +4,13 @@ address = "0.0.0.0:8080"
 decoding.codec = "json"
 framing.method = "newline_delimited"
 
+[transforms.remap]
+type = "remap"
+inputs = ["hwc_lts_stream"]
+file = "/etc/vector/vector-aggregator.vrl"
+
 [sinks.console]
 type = "console"
-inputs = ["hwc_lts_stream"]
+inputs = ["remap"]
 encoding.codec = "json"
 framing.method = "newline_delimited"

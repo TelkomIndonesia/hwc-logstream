@@ -20,6 +20,7 @@ services:
       HUAWEICLOUD_SDK_AK:
       HUAWEICLOUD_SDK_SK:
       HUAWEICLOUD_SDK_PROJECT_ID:
+      HUAWEICLOUD_SDK_DOMAIN_ID:
     volumes:
       - pipe:/var/run/hwc-logstream
     entrypoint: []

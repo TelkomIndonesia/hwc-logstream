@@ -191,18 +191,22 @@ func parseTime(lineNum *string) (t time.Time, err error) {
 }
 
 func (s *Logstream) SavePositition() (err error) {
-	tags := []model.TagsBody{}
+	tags := map[string]string{}
 	for k, v := range s.stream.Tag {
-		tags = append(tags, model.TagsBody{Key: &k, Value: &v})
+		tags[k] = v
 	}
 	pos := strconv.FormatInt(s.last.UnixNano(), 10)
-	tags = append(tags, model.TagsBody{Key: &streamPosTag, Value: &pos})
+	tags[streamPosTag] = pos
 
+	tagsb := []model.TagsBody{}
+	for k, v := range tags {
+		tagsb = append(tagsb, model.TagsBody{Key: &k, Value: &v})
+	}
 	_, err = s.client.CreateTags(&model.CreateTagsRequest{
 		ResourceType: "topics",
 		ResourceId:   s.stream.LogStreamId,
 		Body: &model.CreateTagsReqbody{
-			Tags:   tags,
+			Tags:   tagsb,
 			Action: "create",
 			IsOpen: false,
 		},

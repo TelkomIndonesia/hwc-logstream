@@ -228,5 +228,9 @@ func (s *Logstream) SkiptoCatchUp(maxlag time.Duration) {
 	if now.Sub(s.start) <= maxlag {
 		return
 	}
-	s.start = now.Add(-maxlag)
+
+	newStart := now.Add(-maxlag)
+	log.Printf("[WARN] logs of '%s''%s' from '%s' to '%s' will be skipped	.\n",
+		s.group.LogGroupName, s.stream.LogStreamName, s.start, newStart)
+	s.start = newStart
 }

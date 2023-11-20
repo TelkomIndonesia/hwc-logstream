@@ -25,6 +25,7 @@ type LogstreamManager struct {
 	maxEndFromNow time.Duration
 	maxFetchRange time.Duration
 	minFetchRange time.Duration
+	maxLag        time.Duration
 }
 
 func (m LogstreamManager) Start(ctx context.Context, routine int) (err error) {
@@ -68,6 +69,8 @@ func (m LogstreamManager) Start(ctx context.Context, routine int) (err error) {
 				if _, ok := m.streams[s.ID()]; !ok {
 					continue
 				}
+
+				s.SkiptoCatchUp(m.maxLag)
 
 				end := time.Now().Add(-m.maxEndFromNow)
 				if e := s.start.Add(m.maxFetchRange); e.Before(end) {

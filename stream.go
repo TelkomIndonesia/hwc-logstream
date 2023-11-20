@@ -222,3 +222,11 @@ func (s *Logstream) SavePositition() (err error) {
 	s.start = s.last
 	return
 }
+
+func (s *Logstream) SkiptoCatchUp(maxlag time.Duration) {
+	now := time.Now()
+	if now.Sub(s.start) <= maxlag {
+		return
+	}
+	s.start = now.Add(-maxlag)
+}

@@ -34,6 +34,7 @@ func main() {
 			maxEndFromNow: maxEndFromNow,
 			maxFetchRange: maxFetchRange,
 			minFetchRange: minFetchRange,
+			maxLag:        maxLag,
 		}
 		errc <- mgr.Start(ctx, streamRoutine)
 	}()
